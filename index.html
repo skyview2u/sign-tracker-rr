@@ -324,7 +324,7 @@
 
 <script>
 // ============ CONFIG ============
-var CONFIG = { csvUrl: '', scriptUrl: '', defaultName: '' };
+var CONFIG = { csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRXjQU2Fu5iZU-dubXUYUc9vW94Jd8Bw82Mxvo_pP3KU-HWCuoM_CBSWeKbZv_98VYB1DRB1qbpUU3k/pub?gid=1702836567&single=true&output=csv', scriptUrl: 'https://script.google.com/macros/s/AKfycbzShmB6_310GpdDaAk4Z7BE8HuimyJcaMdtBI-LEbY9Ot9T2IieI8LMdHut_pl2NcsA/exec', defaultName: '' };
 try {
   var saved = JSON.parse(localStorage.getItem('signTrackerConfig') || '{}');
   if (saved.csvUrl) CONFIG.csvUrl = saved.csvUrl;
