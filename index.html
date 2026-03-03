@@ -27,7 +27,10 @@
     flex-wrap: wrap;
     gap: 8px;
     z-index: 1000;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
   }
   .top-bar h1 { font-size: 16px; color: #c8aa5a; letter-spacing: 2px; white-space: nowrap; }
   .top-bar-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -60,19 +63,22 @@
     border-bottom: 1px solid rgba(200,170,90,0.15);
     font-size: 12px;
     z-index: 1000;
-    position: relative;
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 0;
     flex-wrap: wrap;
   }
   .stat { display: flex; align-items: center; gap: 4px; }
   .stat-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .stat-count { color: #c8aa5a; font-weight: 700; }
-  #map { width: 100%; height: calc(100vh - 90px); z-index: 1; }
+  #map { width: 100%; position: fixed; top: 76px; bottom: 0; z-index: 1; }
 
   /* Add mode banner */
   .add-banner {
     display: none;
     position: fixed;
-    top: 80px;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%);
     background: #fb923c;
@@ -175,8 +181,8 @@
     .top-bar h1 { font-size: 13px; }
     .top-bar-controls { width: 100%; }
     select, button { font-size: 12px; padding: 6px 8px; }
-    .stats-bar { font-size: 11px; gap: 12px; }
-    #map { height: calc(100vh - 110px); }
+    .stats-bar { font-size: 11px; gap: 12px; top: 82px; }
+    #map { top: 108px; }
   }
 </style>
 </head>
