@@ -381,25 +381,53 @@ function loadData() {
 
   Papa.parse(CONFIG.csvUrl, {
     download: true,
-    header: true,
+    header: false,
     skipEmptyLines: true,
     complete: function(results) {
-      allSigns = results.data
-        .filter(row => row['Lat'] && row['Lng'] && row['Location / Cross Streets'])
-        .map((row, i) => ({
-          id: row['ID'] || `S-${i+1}`,
-          location: row['Location / Cross Streets'] || '',
-          area: row['Town / Area'] || '',
-          size: row['Sign Size'] || '',
-          status: row['Status'] || 'Planned',
-          placedBy: row['Placed By'] || '',
-          datePlaced: row['Date Placed'] || '',
-          permission: row['Permission?'] || '',
-          notes: row['Notes'] || '',
-          lat: parseFloat(row['Lat']),
-          lng: parseFloat(row['Lng']),
-          rowIndex: i + 2 // Sheet row (1-indexed, +1 for header)
-        }));
+      var rows = results.data;
+      // Find the header row (the one containing "Lat")
+      var headerIdx = -1;
+      for (var r = 0; r < Math.min(rows.length, 10); r++) {
+        for (var c = 0; c < rows[r].length; c++) {
+          if (rows[r][c] && rows[r][c].toString().trim() === 'Lat') {
+            headerIdx = r;
+            break;
+          }
+        }
+        if (headerIdx >= 0) break;
+      }
+      if (headerIdx < 0) {
+        alert('Could not find header row with "Lat" column. Check your sheet.');
+        document.getElementById('loading').classList.add('hidden');
+        loadDemoData();
+        return;
+      }
+      var headers = rows[headerIdx].map(function(h) { return h.toString().trim(); });
+      var col = {};
+      headers.forEach(function(h, i) { col[h] = i; });
+
+      allSigns = [];
+      for (var r = headerIdx + 1; r < rows.length; r++) {
+        var row = rows[r];
+        var lat = parseFloat(row[col['Lat']]);
+        var lng = parseFloat(row[col['Lng']]);
+        var loc = row[col['Location / Cross Streets']] || '';
+        if (!lat || !lng || !loc) continue;
+        allSigns.push({
+          id: row[col['ID']] || 'S-' + (allSigns.length + 1),
+          location: loc,
+          area: row[col['Town / Area']] || '',
+          size: row[col['Sign Size']] || '',
+          status: row[col['Status']] || 'Planned',
+          placedBy: row[col['Placed By']] || '',
+          datePlaced: row[col['Date Placed']] || '',
+          permission: row[col['Permission?']] || '',
+          notes: row[col['Notes']] || '',
+          lat: lat,
+          lng: lng,
+          rowIndex: r + 1 // Actual sheet row number (1-indexed)
+        });
+      }
       renderMap();
       document.getElementById('loading').classList.add('hidden');
     },
