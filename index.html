@@ -178,11 +178,12 @@
   .confirm-text { color: #bbb; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
 
   @media (max-width: 640px) {
-    .top-bar h1 { font-size: 13px; }
-    .top-bar-controls { width: 100%; }
-    select, button { font-size: 12px; padding: 6px 8px; }
-    .stats-bar { font-size: 11px; gap: 12px; top: 82px; }
-    #map { top: 108px; }
+    .top-bar { padding: 6px 8px; gap: 4px; }
+    .top-bar h1 { font-size: 12px; letter-spacing: 1px; }
+    .top-bar-controls { width: 100%; gap: 4px; flex-wrap: nowrap; overflow-x: auto; }
+    select, button { font-size: 11px; padding: 5px 6px; white-space: nowrap; flex-shrink: 0; }
+    .stats-bar { font-size: 10px; gap: 8px; top: 68px; padding: 4px 8px; }
+    #map { top: 92px; }
   }
 </style>
 </head>
