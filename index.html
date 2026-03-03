@@ -17,8 +17,6 @@
     height: 100vh;
     width: 100vw;
   }
-
-  /* Top bar */
   .top-bar {
     background: #111;
     border-bottom: 2px solid rgba(200,170,90,0.3);
@@ -31,36 +29,28 @@
     z-index: 1000;
     position: relative;
   }
-  .top-bar h1 {
-    font-size: 16px;
-    color: #c8aa5a;
-    letter-spacing: 2px;
-    white-space: nowrap;
-  }
-  .top-bar-controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  select, button, input {
+  .top-bar h1 { font-size: 16px; color: #c8aa5a; letter-spacing: 2px; white-space: nowrap; }
+  .top-bar-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  select, button, input, textarea {
     background: #1a1a1a;
     color: #e8dcc0;
     border: 1px solid rgba(200,170,90,0.3);
     padding: 6px 12px;
     border-radius: 4px;
     font-size: 13px;
+    font-family: inherit;
     cursor: pointer;
   }
-  select:focus, button:focus, input:focus { outline: none; border-color: #c8aa5a; }
+  select:focus, button:focus, input:focus, textarea:focus { outline: none; border-color: #c8aa5a; }
   button { background: #2a2210; font-weight: 600; }
   button:hover { background: #3a3015; border-color: #c8aa5a; }
   .btn-route { background: #1a3a1a; color: #4ade80; border-color: rgba(74,222,128,0.3); }
   .btn-route:hover { background: #1a4a1a; }
   .btn-refresh { background: #1a2a3a; color: #60a5fa; border-color: rgba(96,165,250,0.3); }
   .btn-refresh:hover { background: #1a3a4a; }
-
-  /* Stats bar */
+  .btn-add { background: #3a2a1a; color: #fb923c; border-color: rgba(251,146,60,0.3); }
+  .btn-add:hover { background: #4a3a2a; }
+  .btn-add.active { background: #fb923c; color: #000; }
   .stats-bar {
     background: #141414;
     padding: 6px 16px;
@@ -76,30 +66,27 @@
   .stat { display: flex; align-items: center; gap: 4px; }
   .stat-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .stat-count { color: #c8aa5a; font-weight: 700; }
+  #map { width: 100%; height: calc(100vh - 90px); z-index: 1; }
 
-  /* Map */
-  #map {
-    width: 100%;
-    height: calc(100vh - 90px);
-    z-index: 1;
+  /* Add mode banner */
+  .add-banner {
+    display: none;
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fb923c;
+    color: #000;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 1100;
+    box-shadow: 0 4px 20px rgba(251,146,60,0.4);
   }
+  .add-banner.active { display: block; }
 
-  /* Custom markers */
-  .marker-planned-small { background: #3b82f6; border: 2px solid #1d4ed8; }
-  .marker-planned-medium { background: #22c55e; border: 2px solid #15803d; }
-  .marker-planned-large { background: #ef4444; border: 2px solid #b91c1c; }
-  .marker-placed { background: #a855f7; border: 2px solid #7c3aed; }
-  .marker-pending { background: #eab308; border: 2px solid #a16207; }
-  .marker-damaged { background: #6b7280; border: 2px solid #4b5563; }
-
-  .custom-marker {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(0,0,0,0.5);
-  }
-
-  /* Popup */
+  /* Popups */
   .leaflet-popup-content-wrapper {
     background: #1a1a1a !important;
     color: #e8dcc0 !important;
@@ -107,7 +94,7 @@
     border-radius: 8px !important;
   }
   .leaflet-popup-tip { background: #1a1a1a !important; }
-  .leaflet-popup-content { margin: 12px !important; min-width: 220px; }
+  .leaflet-popup-content { margin: 12px !important; min-width: 240px; }
   .popup-title { font-weight: 700; font-size: 14px; color: #c8aa5a; margin-bottom: 6px; }
   .popup-detail { font-size: 12px; margin: 3px 0; color: #bbb; }
   .popup-detail strong { color: #e8dcc0; }
@@ -116,8 +103,10 @@
   .btn-complete { background: #1a4a1a !important; color: #4ade80 !important; border-color: rgba(74,222,128,0.4) !important; }
   .btn-navigate { background: #1a2a4a !important; color: #60a5fa !important; border-color: rgba(96,165,250,0.4) !important; }
   .btn-undo { background: #3a1a1a !important; color: #f87171 !important; border-color: rgba(248,113,113,0.4) !important; }
+  .btn-edit { background: #2a2a1a !important; color: #fbbf24 !important; border-color: rgba(251,191,36,0.4) !important; }
+  .btn-delete { background: #4a0a0a !important; color: #f87171 !important; border-color: rgba(248,113,113,0.4) !important; }
 
-  /* Modal */
+  /* Modals */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -134,15 +123,16 @@
     border-radius: 12px;
     padding: 24px;
     width: 90%;
-    max-width: 360px;
+    max-width: 400px;
   }
   .modal h3 { color: #c8aa5a; margin-bottom: 16px; font-size: 16px; }
   .modal label { font-size: 13px; color: #bbb; display: block; margin-bottom: 6px; }
-  .modal input { width: 100%; padding: 10px; margin-bottom: 16px; font-size: 14px; }
+  .modal input, .modal select, .modal textarea { width: 100%; padding: 10px; margin-bottom: 12px; font-size: 14px; }
+  .modal textarea { height: 70px; resize: vertical; }
   .modal-buttons { display: flex; gap: 8px; }
   .modal-buttons button { flex: 1; padding: 10px; }
 
-  /* Settings panel */
+  /* Settings */
   .settings-overlay {
     display: none;
     position: fixed;
@@ -168,15 +158,8 @@
 
   /* Loading */
   .loading {
-    position: fixed;
-    inset: 0;
-    background: #0a0a0a;
-    z-index: 3000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
+    position: fixed; inset: 0; background: #0a0a0a; z-index: 3000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
     transition: opacity 0.3s;
   }
   .loading.hidden { opacity: 0; pointer-events: none; }
@@ -185,7 +168,9 @@
   .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: #c8aa5a; border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Mobile adjustments */
+  /* Confirm dialog */
+  .confirm-text { color: #bbb; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+
   @media (max-width: 640px) {
     .top-bar h1 { font-size: 13px; }
     .top-bar-controls { width: 100%; }
@@ -204,7 +189,7 @@
 </div>
 
 <div class="top-bar">
-  <h1>★ SIGN TRACKER</h1>
+  <h1>&#9733; SIGN TRACKER</h1>
   <div class="top-bar-controls">
     <select id="filterArea">
       <option value="all">All Areas</option>
@@ -223,35 +208,97 @@
       <option value="Planned">Planned</option>
       <option value="Placed">Placed</option>
       <option value="Pending Permission">Pending</option>
-      <option value="Damaged">Damaged</option>
     </select>
-    <button class="btn-route" onclick="planRoute()">📍 Plan Route</button>
-    <button class="btn-refresh" onclick="loadData()">↻ Refresh</button>
-    <button onclick="openSettings()">⚙</button>
+    <button class="btn-add" id="btnAdd" onclick="toggleAddMode()">+ Add Sign</button>
+    <button class="btn-route" onclick="planRoute()">&#128205; Plan Route</button>
+    <button class="btn-refresh" onclick="loadData()">&#8635; Refresh</button>
+    <button onclick="openSettings()">&#9881;</button>
   </div>
 </div>
+
+<div class="add-banner" id="addBanner">Tap the map to place a new sign &#8212; tap here or press Esc to cancel</div>
 
 <div class="stats-bar" id="statsBar">
   <div class="stat"><span class="stat-dot" style="background:#3b82f6"></span> Planned: <span class="stat-count" id="stat-planned">0</span></div>
   <div class="stat"><span class="stat-dot" style="background:#a855f7"></span> Placed: <span class="stat-count" id="stat-placed">0</span></div>
   <div class="stat"><span class="stat-dot" style="background:#eab308"></span> Pending: <span class="stat-count" id="stat-pending">0</span></div>
-  <div class="stat"><span class="stat-dot" style="background:#6b7280"></span> Damaged: <span class="stat-count" id="stat-damaged">0</span></div>
   <div class="stat">Total: <span class="stat-count" id="stat-total">0</span></div>
   <div class="stat">Complete: <span class="stat-count" id="stat-pct" style="color:#4ade80">0%</span></div>
 </div>
 
 <div id="map"></div>
 
+<!-- Add Sign Modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3>+ Add New Sign Location</h3>
+    <p id="addCoords" style="color:#666; font-size:11px; margin-bottom:12px;"></p>
+    <label>Location description:</label>
+    <input type="text" id="addLocation" placeholder="e.g. Hwy 82 &amp; Indian Wells Rd"/>
+    <label>Area:</label>
+    <select id="addArea">
+      <option value="Alamogordo">Alamogordo</option>
+      <option value="Cloudcroft">Cloudcroft</option>
+      <option value="Timberon">Timberon</option>
+      <option value="Weed">Weed</option>
+      <option value="Tularosa">Tularosa</option>
+      <option value="La Luz">La Luz</option>
+      <option value="High Rolls">High Rolls</option>
+      <option value="Boles Acres">Boles Acres</option>
+      <option value="Holloman">Holloman</option>
+      <option value="Other">Other</option>
+    </select>
+    <label>Sign size:</label>
+    <select id="addSize">
+      <option value="Yard Sign">Yard Sign</option>
+      <option value="4x4'">4x4'</option>
+      <option value="4x8'">4x8'</option>
+    </select>
+    <label>Notes (optional):</label>
+    <textarea id="addNotes" placeholder="Any details about the location..."></textarea>
+    <div class="modal-buttons">
+      <button onclick="closeAddModal()">Cancel</button>
+      <button style="background:#3a2a1a; color:#fb923c;" onclick="submitNewSign()">Add Sign</button>
+    </div>
+  </div>
+</div>
+
 <!-- Mark Complete Modal -->
 <div class="modal-overlay" id="completeModal">
   <div class="modal">
-    <h3>✅ Mark Sign Complete</h3>
+    <h3>&#9989; Mark Sign Complete</h3>
     <p id="completeLocation" style="color:#bbb; margin-bottom:12px; font-size:13px;"></p>
     <label>Your name:</label>
     <input type="text" id="completeName" placeholder="e.g. David B." autocomplete="name"/>
     <div class="modal-buttons">
-      <button onclick="closeModal()">Cancel</button>
-      <button class="btn-complete" onclick="submitComplete()">Mark Placed ✓</button>
+      <button onclick="closeModal('completeModal')">Cancel</button>
+      <button class="btn-complete" onclick="submitComplete()">Mark Placed &#10003;</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Notes Modal -->
+<div class="modal-overlay" id="editNotesModal">
+  <div class="modal">
+    <h3>&#9998; Edit Notes</h3>
+    <p id="editNotesLocation" style="color:#bbb; margin-bottom:12px; font-size:13px;"></p>
+    <label>Notes:</label>
+    <textarea id="editNotesText" placeholder="Enter notes..."></textarea>
+    <div class="modal-buttons">
+      <button onclick="closeModal('editNotesModal')">Cancel</button>
+      <button class="btn-edit" onclick="submitEditNotes()">Save Notes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h3>&#128465; Delete Sign</h3>
+    <p id="deleteLocation" class="confirm-text"></p>
+    <div class="modal-buttons">
+      <button onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="btn-delete" onclick="submitDelete()">Delete</button>
     </div>
   </div>
 </div>
@@ -259,18 +306,15 @@
 <!-- Settings Modal -->
 <div class="settings-overlay" id="settingsOverlay">
   <div class="settings-panel">
-    <h3>⚙ Setup</h3>
+    <h3>&#9881; Setup</h3>
     <label>Google Sheet CSV URL:</label>
     <input type="text" id="csvUrl" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"/>
-    <p>In Google Sheets: File → Share → Publish to web → select "Sign Tracker" tab → CSV format → Publish. Paste the URL above.</p>
-
+    <p>File &gt; Share &gt; Publish to web &gt; "Sign Tracker" tab &gt; CSV format</p>
     <label>Apps Script URL (for write-back):</label>
     <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec"/>
-    <p>Deploy the provided Apps Script as a web app. Paste the URL above.</p>
-
-    <label>Your default name (for quick complete):</label>
+    <p>Extensions &gt; Apps Script &gt; Deploy as web app</p>
+    <label>Your default name:</label>
     <input type="text" id="defaultName" placeholder="e.g. Adam"/>
-
     <div class="modal-buttons" style="margin-top:16px">
       <button onclick="closeSettings()">Cancel</button>
       <button style="background:#1a4a1a; color:#4ade80;" onclick="saveSettings()">Save</button>
@@ -280,90 +324,76 @@
 
 <script>
 // ============ CONFIG ============
-let CONFIG = {
-  csvUrl: '',
-  scriptUrl: '',
-  defaultName: ''
-};
-
-// Load saved config
+var CONFIG = { csvUrl: '', scriptUrl: '', defaultName: '' };
 try {
-  const saved = JSON.parse(localStorage.getItem('signTrackerConfig') || '{}');
+  var saved = JSON.parse(localStorage.getItem('signTrackerConfig') || '{}');
   if (saved.csvUrl) CONFIG.csvUrl = saved.csvUrl;
   if (saved.scriptUrl) CONFIG.scriptUrl = saved.scriptUrl;
   if (saved.defaultName) CONFIG.defaultName = saved.defaultName;
 } catch(e) {}
 
 // ============ MAP SETUP ============
-const map = L.map('map', {
-  center: [32.8995, -105.9603], // Alamogordo
-  zoom: 10,
-  zoomControl: true
-});
-
+var map = L.map('map', { center: [32.8995, -105.9603], zoom: 10, zoomControl: true });
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap',
-  maxZoom: 18
+  attribution: '&copy; OpenStreetMap', maxZoom: 18
 }).addTo(map);
 
-let allSigns = [];
-let markers = [];
-let currentCompleteRow = null;
+var allSigns = [];
+var markers = [];
+var addMode = false;
+var pendingLatLng = null;
+var currentActionIndex = null;
 
 // ============ MARKER COLORS ============
 function getMarkerColor(status, size) {
   if (status === 'Placed') return '#a855f7';
   if (status === 'Pending Permission') return '#eab308';
   if (status === 'Damaged' || status === 'Stolen' || status === 'Removed') return '#6b7280';
-  // Planned - color by size
-  if (size && size.includes('Small')) return '#3b82f6';
-  if (size && size.includes('Medium')) return '#22c55e';
-  if (size && size.includes('Large')) return '#ef4444';
+  if (size === 'Yard Sign') return '#3b82f6';
+  if (size === "4x4'") return '#22c55e';
+  if (size === "4x8'") return '#ef4444';
   return '#3b82f6';
 }
-
 function getBorderColor(status, size) {
   if (status === 'Placed') return '#7c3aed';
   if (status === 'Pending Permission') return '#a16207';
   if (status === 'Damaged' || status === 'Stolen' || status === 'Removed') return '#4b5563';
-  if (size && size.includes('Small')) return '#1d4ed8';
-  if (size && size.includes('Medium')) return '#15803d';
-  if (size && size.includes('Large')) return '#b91c1c';
+  if (size === 'Yard Sign') return '#1d4ed8';
+  if (size === "4x4'") return '#15803d';
+  if (size === "4x8'") return '#b91c1c';
   return '#1d4ed8';
 }
 
 // ============ CREATE MARKER ============
 function createMarker(sign, index) {
-  const color = getMarkerColor(sign.status, sign.size);
-  const border = getBorderColor(sign.status, sign.size);
-  const isComplete = sign.status === 'Placed';
+  var color = getMarkerColor(sign.status, sign.size);
+  var border = getBorderColor(sign.status, sign.size);
+  var isComplete = sign.status === 'Placed';
 
-  const icon = L.divIcon({
+  var icon = L.divIcon({
     className: '',
-    html: `<div style="width:${isComplete ? 12 : 16}px; height:${isComplete ? 12 : 16}px; background:${color}; border:2px solid ${border}; border-radius:50%; box-shadow:0 0 6px rgba(0,0,0,0.5); opacity:${isComplete ? 0.6 : 1};"></div>`,
-    iconSize: [isComplete ? 12 : 16, isComplete ? 12 : 16],
-    iconAnchor: [isComplete ? 6 : 8, isComplete ? 6 : 8]
+    html: '<div style="width:' + (isComplete?12:16) + 'px;height:' + (isComplete?12:16) + 'px;background:' + color + ';border:2px solid ' + border + ';border-radius:50%;box-shadow:0 0 6px rgba(0,0,0,0.5);opacity:' + (isComplete?0.6:1) + ';"></div>',
+    iconSize: [isComplete?12:16, isComplete?12:16],
+    iconAnchor: [isComplete?6:8, isComplete?6:8]
   });
 
-  const marker = L.marker([sign.lat, sign.lng], { icon })
-    .addTo(map);
+  var marker = L.marker([sign.lat, sign.lng], { icon: icon }).addTo(map);
 
-  const popupHtml = `
-    <div class="popup-title">${sign.location}</div>
-    <div class="popup-detail"><strong>Area:</strong> ${sign.area}</div>
-    <div class="popup-detail"><strong>Size:</strong> ${sign.size}</div>
-    <div class="popup-detail"><strong>Status:</strong> ${sign.status}</div>
-    ${sign.placedBy ? `<div class="popup-detail"><strong>Placed by:</strong> ${sign.placedBy}</div>` : ''}
-    ${sign.datePlaced ? `<div class="popup-detail"><strong>Date placed:</strong> ${sign.datePlaced}</div>` : ''}
-    ${sign.notes ? `<div class="popup-detail"><strong>Notes:</strong> ${sign.notes}</div>` : ''}
-    <div class="popup-actions">
-      ${sign.status !== 'Placed' ?
-        `<button class="btn-complete" onclick="openComplete(${index})">✅ Mark Complete</button>` :
-        `<button class="btn-undo" onclick="undoComplete(${index})">↩ Mark Incomplete</button>`
-      }
-      <button class="btn-navigate" onclick="navigateTo(${sign.lat}, ${sign.lng})">🧭 Navigate Here</button>
-    </div>
-  `;
+  var popupHtml = '<div class="popup-title">' + sign.location + '</div>' +
+    '<div class="popup-detail"><strong>Area:</strong> ' + sign.area + '</div>' +
+    '<div class="popup-detail"><strong>Size:</strong> ' + sign.size + '</div>' +
+    '<div class="popup-detail"><strong>Status:</strong> ' + sign.status + '</div>' +
+    (sign.placedBy ? '<div class="popup-detail"><strong>Placed by:</strong> ' + sign.placedBy + '</div>' : '') +
+    (sign.datePlaced ? '<div class="popup-detail"><strong>Date placed:</strong> ' + sign.datePlaced + '</div>' : '') +
+    (sign.notes ? '<div class="popup-detail"><strong>Notes:</strong> ' + sign.notes + '</div>' : '') +
+    '<div class="popup-actions">' +
+    (sign.status !== 'Placed' ?
+      '<button class="btn-complete" onclick="openComplete(' + index + ')">&#9989; Mark Complete</button>' :
+      '<button class="btn-undo" onclick="undoComplete(' + index + ')">&#8617; Mark Incomplete</button>') +
+    '<button class="btn-navigate" onclick="navigateTo(' + sign.lat + ',' + sign.lng + ')">&#129517; Navigate Here</button>' +
+    '<button class="btn-edit" onclick="openEditNotes(' + index + ')">&#9998; Edit Notes</button>' +
+    '<button class="btn-delete" onclick="openDelete(' + index + ')">&#128465; Delete Sign</button>' +
+    '</div>';
 
   marker.bindPopup(popupHtml);
   return marker;
@@ -371,12 +401,7 @@ function createMarker(sign, index) {
 
 // ============ LOAD DATA ============
 function loadData() {
-  if (!CONFIG.csvUrl) {
-    // Use demo data if no URL configured
-    loadDemoData();
-    return;
-  }
-
+  if (!CONFIG.csvUrl) { loadDemoData(); return; }
   document.getElementById('loading').classList.remove('hidden');
 
   Papa.parse(CONFIG.csvUrl, {
@@ -385,19 +410,15 @@ function loadData() {
     skipEmptyLines: true,
     complete: function(results) {
       var rows = results.data;
-      // Find the header row (the one containing "Lat")
       var headerIdx = -1;
       for (var r = 0; r < Math.min(rows.length, 10); r++) {
         for (var c = 0; c < rows[r].length; c++) {
-          if (rows[r][c] && rows[r][c].toString().trim() === 'Lat') {
-            headerIdx = r;
-            break;
-          }
+          if (rows[r][c] && rows[r][c].toString().trim() === 'Lat') { headerIdx = r; break; }
         }
         if (headerIdx >= 0) break;
       }
       if (headerIdx < 0) {
-        alert('Could not find header row with "Lat" column. Check your sheet.');
+        alert('Could not find header row with "Lat" column.');
         document.getElementById('loading').classList.add('hidden');
         loadDemoData();
         return;
@@ -425,14 +446,14 @@ function loadData() {
           notes: row[col['Notes']] || '',
           lat: lat,
           lng: lng,
-          rowIndex: r + 1 // Actual sheet row number (1-indexed)
+          rowIndex: r + 1
         });
       }
       renderMap();
       document.getElementById('loading').classList.add('hidden');
     },
     error: function(err) {
-      alert('Error loading sheet data. Check your CSV URL in settings.');
+      alert('Error loading sheet data.');
       document.getElementById('loading').classList.add('hidden');
       loadDemoData();
     }
@@ -442,16 +463,11 @@ function loadData() {
 // ============ DEMO DATA ============
 function loadDemoData() {
   allSigns = [
-    { id:'S-001', location:'Hwy 82 & Indian Wells Rd', area:'Alamogordo', size:'Large (Banner)', status:'Planned', placedBy:'', datePlaced:'', notes:'High visibility intersection', lat:32.8995, lng:-105.9603, rowIndex:2 },
-    { id:'S-002', location:'10th St & White Sands Blvd', area:'Alamogordo', size:'Medium (Road)', status:'Placed', placedBy:'David B.', datePlaced:'2/26/2026', notes:'Corner lot, good visibility', lat:32.8998, lng:-105.9596, rowIndex:3 },
-    { id:'S-003', location:'Hwy 82 near Tunnel', area:'Cloudcroft', size:'Small (Yard)', status:'Planned', placedBy:'', datePlaced:'', notes:'Public ROW', lat:32.9570, lng:-105.7427, rowIndex:4 },
-    { id:'S-004', location:'Community Center entrance', area:'Weed', size:'Medium (Road)', status:'Pending Permission', placedBy:'', datePlaced:'', notes:'Waiting on HOA approval', lat:32.8039, lng:-105.5813, rowIndex:5 },
-    { id:'S-005', location:'Timberon Dr & Hwy 24', area:'Timberon', size:'Small (Yard)', status:'Placed', placedBy:'Raul R.', datePlaced:'2/27/2026', notes:'', lat:32.6350, lng:-105.6870, rowIndex:6 },
-    { id:'S-006', location:'First St & Granado', area:'Tularosa', size:'Medium (Road)', status:'Planned', placedBy:'', datePlaced:'', notes:'Near post office', lat:32.9912, lng:-106.0195, rowIndex:7 },
-    { id:'S-007', location:'US-54 & Hwy 70 junction', area:'Alamogordo', size:'Large (Banner)', status:'Planned', placedBy:'', datePlaced:'', notes:'Major interchange', lat:32.8685, lng:-105.9490, rowIndex:8 },
-    { id:'S-008', location:'La Luz Canyon Rd entrance', area:'La Luz', size:'Small (Yard)', status:'Planned', placedBy:'', datePlaced:'', notes:'', lat:32.9602, lng:-105.9371, rowIndex:9 },
-    { id:'S-009', location:'James Canyon Rd & 82', area:'Cloudcroft', size:'Medium (Road)', status:'Planned', placedBy:'', datePlaced:'', notes:'Heavy tourist traffic', lat:32.9460, lng:-105.7640, rowIndex:10 },
-    { id:'S-010', location:'Boles Acres main entrance', area:'Boles Acres', size:'Small (Yard)', status:'Planned', placedBy:'', datePlaced:'', notes:'', lat:32.8450, lng:-106.0020, rowIndex:11 },
+    { id:'S-001', location:'Hwy 82 & Indian Wells Rd', area:'Alamogordo', size:"4x8'", status:'Planned', placedBy:'', datePlaced:'', notes:'High visibility intersection', lat:32.8995, lng:-105.9603, rowIndex:4 },
+    { id:'S-002', location:'10th St & White Sands Blvd', area:'Alamogordo', size:"4x4'", status:'Placed', placedBy:'David B.', datePlaced:'2/26/2026', notes:'Corner lot', lat:32.8998, lng:-105.9596, rowIndex:5 },
+    { id:'S-003', location:'Hwy 82 near Tunnel', area:'Cloudcroft', size:'Yard Sign', status:'Planned', placedBy:'', datePlaced:'', notes:'Public ROW', lat:32.9570, lng:-105.7427, rowIndex:6 },
+    { id:'S-004', location:'Community Center entrance', area:'Weed', size:"4x4'", status:'Pending Permission', placedBy:'', datePlaced:'', notes:'Waiting on HOA', lat:32.8039, lng:-105.5813, rowIndex:7 },
+    { id:'S-005', location:'Timberon Dr & Hwy 24', area:'Timberon', size:'Yard Sign', status:'Placed', placedBy:'Raul R.', datePlaced:'2/27/2026', notes:'', lat:32.6350, lng:-105.6870, rowIndex:8 },
   ];
   renderMap();
   document.getElementById('loading').classList.add('hidden');
@@ -459,43 +475,27 @@ function loadDemoData() {
 
 // ============ RENDER MAP ============
 function renderMap() {
-  // Clear existing
-  markers.forEach(m => map.removeLayer(m));
+  markers.forEach(function(m) { map.removeLayer(m); });
   markers = [];
+  var areaFilter = document.getElementById('filterArea').value;
+  var statusFilter = document.getElementById('filterStatus').value;
 
-  const areaFilter = document.getElementById('filterArea').value;
-  const statusFilter = document.getElementById('filterStatus').value;
-
-  let filtered = allSigns.filter(s => {
-    if (areaFilter !== 'all' && s.area !== areaFilter) return false;
-    if (statusFilter !== 'all' && s.status !== statusFilter) return false;
-    return true;
+  allSigns.forEach(function(sign, i) {
+    if (areaFilter !== 'all' && sign.area !== areaFilter) return;
+    if (statusFilter !== 'all' && sign.status !== statusFilter) return;
+    markers.push(createMarker(sign, i));
   });
 
-  filtered.forEach((sign, i) => {
-    const originalIndex = allSigns.indexOf(sign);
-    const m = createMarker(sign, originalIndex);
-    markers.push(m);
-  });
-
-  // Update stats
-  const total = allSigns.length;
-  const planned = allSigns.filter(s => s.status === 'Planned').length;
-  const placed = allSigns.filter(s => s.status === 'Placed').length;
-  const pending = allSigns.filter(s => s.status === 'Pending Permission').length;
-  const damaged = allSigns.filter(s => s.status === 'Damaged' || s.status === 'Stolen').length;
-
+  var total = allSigns.length;
+  var placed = allSigns.filter(function(s) { return s.status === 'Placed'; }).length;
   document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-planned').textContent = planned;
+  document.getElementById('stat-planned').textContent = allSigns.filter(function(s) { return s.status === 'Planned'; }).length;
   document.getElementById('stat-placed').textContent = placed;
-  document.getElementById('stat-pending').textContent = pending;
-  document.getElementById('stat-damaged').textContent = damaged;
+  document.getElementById('stat-pending').textContent = allSigns.filter(function(s) { return s.status === 'Pending Permission'; }).length;
   document.getElementById('stat-pct').textContent = total > 0 ? Math.round((placed / total) * 100) + '%' : '0%';
 
-  // Fit bounds if we have markers
   if (markers.length > 0) {
-    const group = L.featureGroup(markers);
-    map.fitBounds(group.getBounds().pad(0.1));
+    map.fitBounds(L.featureGroup(markers).getBounds().pad(0.1));
   }
 }
 
@@ -503,91 +503,194 @@ function renderMap() {
 document.getElementById('filterArea').addEventListener('change', renderMap);
 document.getElementById('filterStatus').addEventListener('change', renderMap);
 
+// ============ ADD SIGN MODE ============
+function toggleAddMode() {
+  addMode = !addMode;
+  document.getElementById('btnAdd').classList.toggle('active', addMode);
+  document.getElementById('addBanner').classList.toggle('active', addMode);
+  if (addMode) {
+    map.getContainer().style.cursor = 'crosshair';
+  } else {
+    map.getContainer().style.cursor = '';
+  }
+}
+
+map.on('click', function(e) {
+  if (!addMode) return;
+  pendingLatLng = e.latlng;
+  document.getElementById('addCoords').textContent = 'Lat: ' + e.latlng.lat.toFixed(6) + ', Lng: ' + e.latlng.lng.toFixed(6);
+  document.getElementById('addLocation').value = '';
+  document.getElementById('addNotes').value = '';
+  document.getElementById('addModal').classList.add('active');
+  toggleAddMode();
+  setTimeout(function() { document.getElementById('addLocation').focus(); }, 100);
+});
+
+document.getElementById('addBanner').addEventListener('click', function() {
+  if (addMode) toggleAddMode();
+});
+
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('active');
+  pendingLatLng = null;
+}
+
+function submitNewSign() {
+  if (!pendingLatLng) return;
+  var loc = document.getElementById('addLocation').value.trim();
+  if (!loc) { alert('Please enter a location description'); return; }
+
+  var area = document.getElementById('addArea').value;
+  var size = document.getElementById('addSize').value;
+  var notes = document.getElementById('addNotes').value.trim();
+  var lat = pendingLatLng.lat;
+  var lng = pendingLatLng.lng;
+  var id = 'S-' + String(allSigns.length + 1).padStart(3, '0');
+  var today = new Date().toLocaleDateString('en-US');
+
+  var newSign = {
+    id: id, location: loc, area: area, size: size, status: 'Planned',
+    placedBy: '', datePlaced: '', permission: '', notes: notes,
+    lat: lat, lng: lng, rowIndex: -1
+  };
+
+  // Write to sheet
+  if (CONFIG.scriptUrl) {
+    fetch(CONFIG.scriptUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'addSign',
+        id: id, dateAdded: today, location: loc, area: area,
+        size: size, notes: notes, lat: lat.toFixed(6), lng: lng.toFixed(6)
+      })
+    }).catch(function(err) { console.log('Add sent'); });
+  }
+
+  allSigns.push(newSign);
+  closeAddModal();
+  renderMap();
+}
+
 // ============ MARK COMPLETE ============
 function openComplete(index) {
-  currentCompleteRow = index;
-  const sign = allSigns[index];
-  document.getElementById('completeLocation').textContent = sign.location + ' — ' + sign.area;
+  currentActionIndex = index;
+  var sign = allSigns[index];
+  document.getElementById('completeLocation').textContent = sign.location + ' \u2014 ' + sign.area;
   document.getElementById('completeName').value = CONFIG.defaultName || '';
   document.getElementById('completeModal').classList.add('active');
   map.closePopup();
-
-  // Focus name input after a brief delay
-  setTimeout(() => document.getElementById('completeName').focus(), 100);
-}
-
-function closeModal() {
-  document.getElementById('completeModal').classList.remove('active');
-  currentCompleteRow = null;
+  setTimeout(function() { document.getElementById('completeName').focus(); }, 100);
 }
 
 function submitComplete() {
-  if (currentCompleteRow === null) return;
-  const name = document.getElementById('completeName').value.trim();
+  if (currentActionIndex === null) return;
+  var name = document.getElementById('completeName').value.trim();
   if (!name) { alert('Please enter your name'); return; }
 
-  const sign = allSigns[currentCompleteRow];
-  const today = new Date().toLocaleDateString('en-US');
-
-  // Update local data
+  var sign = allSigns[currentActionIndex];
+  var today = new Date().toLocaleDateString('en-US');
   sign.status = 'Placed';
   sign.placedBy = name;
   sign.datePlaced = today;
 
-  // Write back to Google Sheet via Apps Script
-  if (CONFIG.scriptUrl) {
+  if (CONFIG.scriptUrl && sign.rowIndex > 0) {
     fetch(CONFIG.scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'markComplete',
-        row: sign.rowIndex,
-        placedBy: name,
-        datePlaced: today
-      })
-    }).catch(err => console.log('Write-back sent (no-cors)'));
+      body: JSON.stringify({ action: 'markComplete', row: sign.rowIndex, placedBy: name, datePlaced: today })
+    }).catch(function(err) { console.log('Complete sent'); });
   }
 
-  closeModal();
+  closeModal('completeModal');
   renderMap();
 }
 
 function undoComplete(index) {
-  const sign = allSigns[index];
+  var sign = allSigns[index];
   sign.status = 'Planned';
   sign.placedBy = '';
   sign.datePlaced = '';
 
-  if (CONFIG.scriptUrl) {
+  if (CONFIG.scriptUrl && sign.rowIndex > 0) {
     fetch(CONFIG.scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'markIncomplete',
-        row: sign.rowIndex
-      })
-    }).catch(err => console.log('Write-back sent (no-cors)'));
+      body: JSON.stringify({ action: 'markIncomplete', row: sign.rowIndex })
+    }).catch(function(err) { console.log('Undo sent'); });
   }
 
   map.closePopup();
   renderMap();
 }
 
-// ============ NAVIGATE TO SINGLE SIGN ============
+// ============ EDIT NOTES ============
+function openEditNotes(index) {
+  currentActionIndex = index;
+  var sign = allSigns[index];
+  document.getElementById('editNotesLocation').textContent = sign.location + ' \u2014 ' + sign.area;
+  document.getElementById('editNotesText').value = sign.notes || '';
+  document.getElementById('editNotesModal').classList.add('active');
+  map.closePopup();
+  setTimeout(function() { document.getElementById('editNotesText').focus(); }, 100);
+}
+
+function submitEditNotes() {
+  if (currentActionIndex === null) return;
+  var sign = allSigns[currentActionIndex];
+  var notes = document.getElementById('editNotesText').value.trim();
+  sign.notes = notes;
+
+  if (CONFIG.scriptUrl && sign.rowIndex > 0) {
+    fetch(CONFIG.scriptUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'editNotes', row: sign.rowIndex, notes: notes })
+    }).catch(function(err) { console.log('Notes sent'); });
+  }
+
+  closeModal('editNotesModal');
+  renderMap();
+}
+
+// ============ DELETE SIGN ============
+function openDelete(index) {
+  currentActionIndex = index;
+  var sign = allSigns[index];
+  document.getElementById('deleteLocation').textContent = 'Are you sure you want to delete "' + sign.location + '" in ' + sign.area + '? This will also remove it from the spreadsheet.';
+  document.getElementById('deleteModal').classList.add('active');
+  map.closePopup();
+}
+
+function submitDelete() {
+  if (currentActionIndex === null) return;
+  var sign = allSigns[currentActionIndex];
+
+  if (CONFIG.scriptUrl && sign.rowIndex > 0) {
+    fetch(CONFIG.scriptUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'deleteSign', row: sign.rowIndex })
+    }).catch(function(err) { console.log('Delete sent'); });
+  }
+
+  allSigns.splice(currentActionIndex, 1);
+  closeModal('deleteModal');
+  renderMap();
+}
+
+// ============ NAVIGATE ============
 function navigateTo(lat, lng) {
-  window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+  window.open('https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng, '_blank');
 }
 
 // ============ PLAN ROUTE ============
 function planRoute() {
-  const areaFilter = document.getElementById('filterArea').value;
-  const statusFilter = document.getElementById('filterStatus').value;
+  var areaFilter = document.getElementById('filterArea').value;
+  var statusFilter = document.getElementById('filterStatus').value;
 
-  // Get uncompleted signs matching current filters
-  let routeSigns = allSigns.filter(s => {
-    if (s.status === 'Placed') return false; // Skip completed
+  var routeSigns = allSigns.filter(function(s) {
+    if (s.status === 'Placed') return false;
     if (areaFilter !== 'all' && s.area !== areaFilter) return false;
     if (statusFilter !== 'all' && s.status !== statusFilter) return false;
     return s.lat && s.lng;
@@ -597,37 +700,36 @@ function planRoute() {
     alert('No uncompleted signs to route to with current filters.');
     return;
   }
-
   if (routeSigns.length > 25) {
-    alert(`${routeSigns.length} signs found. Google Maps supports max 25 waypoints. Showing first 25 — try filtering by area.`);
+    alert(routeSigns.length + ' signs found. Google Maps supports max 25 stops. Showing first 25 \u2014 try filtering by area.');
     routeSigns = routeSigns.slice(0, 25);
   }
 
-  // Simple nearest-neighbor sort for better route
-  const sorted = [routeSigns.shift()];
+  // Nearest-neighbor sort
+  var sorted = [routeSigns.shift()];
   while (routeSigns.length > 0) {
-    const last = sorted[sorted.length - 1];
-    let nearest = 0;
-    let nearestDist = Infinity;
-    routeSigns.forEach((s, i) => {
-      const d = Math.pow(s.lat - last.lat, 2) + Math.pow(s.lng - last.lng, 2);
+    var last = sorted[sorted.length - 1];
+    var nearest = 0, nearestDist = Infinity;
+    routeSigns.forEach(function(s, i) {
+      var d = Math.pow(s.lat - last.lat, 2) + Math.pow(s.lng - last.lng, 2);
       if (d < nearestDist) { nearestDist = d; nearest = i; }
     });
     sorted.push(routeSigns.splice(nearest, 1)[0]);
   }
 
-  // Build Google Maps URL
-  const origin = `${sorted[0].lat},${sorted[0].lng}`;
-  const dest = `${sorted[sorted.length - 1].lat},${sorted[sorted.length - 1].lng}`;
-  const waypoints = sorted.length > 2
-    ? sorted.slice(1, -1).map(s => `${s.lat},${s.lng}`).join('|')
-    : '';
-
-  let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}`;
-  if (waypoints) url += `&waypoints=${waypoints}`;
-  url += `&travelmode=driving`;
-
+  var origin = sorted[0].lat + ',' + sorted[0].lng;
+  var dest = sorted[sorted.length - 1].lat + ',' + sorted[sorted.length - 1].lng;
+  var waypoints = sorted.length > 2 ? sorted.slice(1, -1).map(function(s) { return s.lat + ',' + s.lng; }).join('|') : '';
+  var url = 'https://www.google.com/maps/dir/?api=1&origin=' + origin + '&destination=' + dest;
+  if (waypoints) url += '&waypoints=' + waypoints;
+  url += '&travelmode=driving';
   window.open(url, '_blank');
+}
+
+// ============ MODAL HELPERS ============
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  currentActionIndex = null;
 }
 
 // ============ SETTINGS ============
@@ -637,30 +739,29 @@ function openSettings() {
   document.getElementById('defaultName').value = CONFIG.defaultName;
   document.getElementById('settingsOverlay').classList.add('active');
 }
-
-function closeSettings() {
-  document.getElementById('settingsOverlay').classList.remove('active');
-}
-
+function closeSettings() { document.getElementById('settingsOverlay').classList.remove('active'); }
 function saveSettings() {
   CONFIG.csvUrl = document.getElementById('csvUrl').value.trim();
   CONFIG.scriptUrl = document.getElementById('scriptUrl').value.trim();
   CONFIG.defaultName = document.getElementById('defaultName').value.trim();
-
   localStorage.setItem('signTrackerConfig', JSON.stringify(CONFIG));
   closeSettings();
   loadData();
 }
 
 // ============ KEYBOARD ============
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeSettings(); }
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    if (addMode) toggleAddMode();
+    closeAddModal();
+    closeModal('completeModal');
+    closeModal('editNotesModal');
+    closeModal('deleteModal');
+    closeSettings();
+  }
 });
-
-// Enter key submits complete modal
-document.getElementById('completeName').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitComplete();
-});
+document.getElementById('completeName').addEventListener('keydown', function(e) { if (e.key === 'Enter') submitComplete(); });
+document.getElementById('addLocation').addEventListener('keydown', function(e) { if (e.key === 'Enter') submitNewSign(); });
 
 // ============ INIT ============
 loadData();
